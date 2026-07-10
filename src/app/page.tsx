@@ -1995,10 +1995,10 @@ export default function Home() {
 
             {/* Ultra fancy brand name and tool name with hyper cute decorations */}
             <div className="relative flex flex-col items-center space-y-3">
-              {/* Brand name - LDB with ultra fancy effects */}
+              {/* Brand name - Pixel beads 我嘞个豆 with ultra fancy effects */}
               <div className="relative">
                 <h1 className="relative text-4xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 via-blue-500 to-cyan-400 tracking-wider drop-shadow-2xl transform hover:scale-105 transition-transform duration-300 animate-bounce">
-                  LDB
+                  Pixel beads 我嘞个豆
                 </h1>
                 
                 {/* Super fancy geometric decorations */}
@@ -2668,7 +2668,7 @@ export default function Home() {
 
         {/* Copyright text color */}
         <p className="font-medium text-gray-600 dark:text-gray-300">
-          LDB 拼豆底稿生成器 &copy; {new Date().getFullYear()}
+          Pixel beads 我嘞个豆 拼豆底稿生成器 &copy; {new Date().getFullYear()}
         </p>
       </footer>
 
@@ -2709,7 +2709,7 @@ export default function Home() {
                   </h3>
                   <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
                     <p className="text-gray-700 dark:text-gray-300">
-                      上传图片 → AI优化 → 去掉背景 → 下载图纸 → 专心拼豆
+                      上传图片 → AI优化 → 选择尺寸 → 去掉背景 → 注意颗数 → 下载图纸 → 专心拼豆
                     </p>
                   </div>
                 </div>
