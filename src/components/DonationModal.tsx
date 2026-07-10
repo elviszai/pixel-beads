@@ -18,14 +18,11 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
           <div className="flex justify-between items-center mb-3 sm:mb-5">
             <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100 bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent font-serif italic flex items-center" style={{ fontFamily: "'Brush Script MT', cursive, serif" }}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 8h1a2 2 0 0 1 2 2v1c0 1.1-.9 2-2 2h-1" fill="#f9a8d4" />
-                <path d="M6 8h12v9a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V8z" fill="#f9a8d4" />
-                <path d="M6 8V7a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v1" fill="#f472b6" />
-                <path d="M12 16v-4" stroke="#7d2a5a" />
-                <path d="M9.5 14.5L9 16" stroke="#7d2a5a" />
-                <path d="M14.5 14.5L15 16" stroke="#7d2a5a" />
+                <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#f472b6" />
+                <path d="M2 17l10 5 10-5" stroke="#f472b6" />
+                <path d="M2 12l10 5 10-5" stroke="#f472b6" />
               </svg>
-              Buy Me A Milk Tea
+              📱 扫码关注我们
             </h3>
             <button
               onClick={onClose}
@@ -38,23 +35,23 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
           </div>
           <div className="text-center">
             <p className="mb-3 text-sm sm:text-base text-gray-600 dark:text-gray-300 break-words">
-              开源项目是把作者和用户紧紧联系在一起的社群，如果您希望这个项目继续发展，可以请作者喝一杯奶茶。
+              扫码关注我们的抖音，获取更多拼豆创意和店铺活动信息 🧋
             </p>
             <p className="mb-4 sm:mb-6 text-sm sm:text-base text-gray-600 dark:text-gray-300 break-words">
-              您的支持是作者把项目继续下去的动力。
+              在店里拼豆的时候别忘了@我们，你的作品可能会被官方翻牌哦 ✨
             </p>
             <div className="flex justify-center mb-4 sm:mb-5">
               <div className="relative w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 p-1 sm:p-2 bg-gradient-to-r from-pink-100 to-rose-100 dark:from-pink-900/30 dark:to-rose-900/30 rounded-lg shadow-md">
                 <Image
-                  src="/donation-qr.jpg"
-                  alt="赞赏码"
+                  src="/douyin_qr.png"
+                  alt="抖音二维码"
                   fill
                   className="object-contain p-1 sm:p-2"
                 />
               </div>
             </div>
             <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 py-1.5 px-3 sm:py-2 sm:px-4 rounded-full inline-block shadow-sm">
-              微信扫描上方赞赏码，请作者喝一杯奶茶。
+              抖音搜索：Pixel beads 我嘞个豆
             </p>
           </div>
         </div>
@@ -63,4 +60,4 @@ const DonationModal: React.FC<DonationModalProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default DonationModal; 
+export default DonationModal;
