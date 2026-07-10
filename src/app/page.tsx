@@ -2650,7 +2650,7 @@ export default function Home() {
               <path d="M9.5 14.5L9 16" stroke="#7d2a5a" />
               <path d="M14.5 14.5L15 16" stroke="#7d2a5a" />
             </svg>
-            <span>请作者喝一杯奶茶</span>
+            <span>抖音扫码关注领优惠</span>
           </button>
           
           {/* 帮助教程按钮 */}
