@@ -641,22 +641,61 @@ export default function Home() {
   // 显示加载状态（可选：在界面上显示"正在生成Q版卡通..."）
   // 这里我们直接调用AI优化，然后设置结果
   
+ // ========== 新增：图片压缩函数 ==========
+async function compressImageToBase64(imageSrc: string, maxWidth: number = 1024, quality: number = 0.85): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
+
+      // 限制最大尺寸，同时保持比例
+      if (width > maxWidth || height > maxWidth) {
+        const ratio = Math.min(maxWidth / width, maxWidth / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        reject(new Error('无法创建Canvas上下文'));
+        return;
+      }
+      ctx.drawImage(img, 0, 0, width, height);
+      // 压缩为 JPEG 格式，质量 quality
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => reject(new Error('图片加载失败'));
+    img.src = imageSrc;
+  });
+}
+// ========== 压缩函数结束 ==========
+
+// ========== 修改后的 handleCropConfirm ==========
+const handleCropConfirm = async (croppedImageSrc: string) => {
+  // 先显示原图（让用户知道图片已上传）
+  setOriginalImageSrc(croppedImageSrc);
+  
+  // 显示加载状态（可选：在界面上显示"正在生成Q版卡通..."）
+  // 这里我们直接调用AI优化，然后设置结果
+  
   try {
-    // 1. 把图片转成Base64（豆包API需要的格式）
-    const response = await fetch(croppedImageSrc);
-    const blob = await response.blob();
-    const base64Image = await new Promise<string>((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.readAsDataURL(blob);
-    });
+    // 1. 把图片转成Base64（先压缩再转，避免请求体超过6MB限制）
+    const compressedBase64 = await compressImageToBase64(croppedImageSrc, 1024, 0.85);
+    
+    // 检查压缩后的大小（可选，用于调试）
+    const sizeInMB = compressedBase64.length / 1024 / 1024;
+    console.log(`📊 压缩后图片大小: ${sizeInMB.toFixed(2)} MB`);
 
     // 2. 调用豆包API（通过 /api/ai-optimize 接口）
     const aiResponse = await fetch('/api/ai-optimize', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        image: base64Image,
+        image: compressedBase64,
         prompt: '将照片转换为可爱的Q版卡通风格，大头小身体，圆润脸型，大眼睛，清晰的线条，颜色干净明亮，纯白背景，适合制作拼豆图纸'
       }),
     });
@@ -708,6 +747,16 @@ export default function Home() {
     setGranularityInput(defaultGranularity.toString());
     setRemapTrigger(prev => prev + 1);
   }
+
+  // 关闭裁剪弹窗
+  setIsCropperOpen(false);
+  setCropperImageSrc('');
+  setPendingFile(null);
+  setIsManualColoringMode(false);
+  setSelectedColor(null);
+  setIsEraseMode(false);
+};
+// ========== 修改后的 handleCropConfirm 结束 ==========
 
   // 关闭裁剪弹窗
   setIsCropperOpen(false);
