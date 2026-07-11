@@ -696,7 +696,7 @@ const handleCropConfirm = async (croppedImageSrc: string) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         image: compressedBase64,
-        prompt: '将照片转换为可爱的Q版卡通风格，大头小身体，圆润脸型，大眼睛，清晰的线条，颜色干净明亮，纯白背景，适合制作拼豆图纸'
+        prompt: '将照片转换为可爱的Q版卡通风格，大头小身体，圆润脸型，大眼睛，清晰的线条，轮廓描边清晰，颜色干净明亮，色块尽可能的少，减少杂色纯白背景，适合制作拼豆图纸'
       }),
     });
 
