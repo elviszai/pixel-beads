@@ -634,29 +634,89 @@ export default function Home() {
   };
 
   // 处理裁剪确认
-  const handleCropConfirm = (croppedImageSrc: string) => {
+ const handleCropConfirm = async (croppedImageSrc: string) => {
+  // 先显示原图（让用户知道图片已上传）
+  setOriginalImageSrc(croppedImageSrc);
+  
+  // 显示加载状态（可选：在界面上显示"正在生成Q版卡通..."）
+  // 这里我们直接调用AI优化，然后设置结果
+  
+  try {
+    // 1. 把图片转成Base64（豆包API需要的格式）
+    const response = await fetch(croppedImageSrc);
+    const blob = await response.blob();
+    const base64Image = await new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.readAsDataURL(blob);
+    });
+
+    // 2. 调用豆包API（通过 /api/ai-optimize 接口）
+    const aiResponse = await fetch('/api/ai-optimize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        image: base64Image,
+        prompt: '将照片转换为可爱的Q版卡通风格，大头小身体，圆润脸型，大眼睛，清晰的线条，颜色干净明亮，纯白背景，适合制作拼豆图纸'
+      }),
+    });
+
+    if (aiResponse.ok) {
+      const data = await aiResponse.json();
+      const cartoonImageSrc = data.image; // 豆包返回的Q版卡通图
+      
+      // 3. 用卡通图替换原图，触发重新生成拼豆
+      setOriginalImageSrc(cartoonImageSrc);
+      // 下面的状态重置是必要的，让拼豆生成逻辑重新执行
+      setMappedPixelData(null);
+      setGridDimensions(null);
+      setColorCounts(null);
+      setTotalBeadCount(0);
+      setInitialGridColorKeys(new Set());
+      // 保持格子数不变
+      const defaultGranularity = 60;
+      setGranularity(defaultGranularity);
+      setGranularityInput(defaultGranularity.toString());
+      setRemapTrigger(prev => prev + 1);
+      
+      console.log('✅ 豆包AI优化完成，已自动生成Q版卡通图');
+    } else {
+      // 如果AI调用失败，仍然使用原图（不阻断流程）
+      console.warn('⚠️ 豆包AI调用失败，使用原图');
+      setOriginalImageSrc(croppedImageSrc);
+      setMappedPixelData(null);
+      setGridDimensions(null);
+      setColorCounts(null);
+      setTotalBeadCount(0);
+      setInitialGridColorKeys(new Set());
+      const defaultGranularity = 60;
+      setGranularity(defaultGranularity);
+      setGranularityInput(defaultGranularity.toString());
+      setRemapTrigger(prev => prev + 1);
+    }
+  } catch (error) {
+    // 如果出任何错误，仍然使用原图
+    console.error('❌ 处理失败:', error);
     setOriginalImageSrc(croppedImageSrc);
     setMappedPixelData(null);
     setGridDimensions(null);
     setColorCounts(null);
     setTotalBeadCount(0);
-    setInitialGridColorKeys(new Set()); // ++ 重置初始键 ++
-    // ++ 重置横轴格子数量为默认值 ++
+    setInitialGridColorKeys(new Set());
     const defaultGranularity = 60;
     setGranularity(defaultGranularity);
     setGranularityInput(defaultGranularity.toString());
-    setRemapTrigger(prev => prev + 1); // Trigger full remap for new image
-    
-    // 关闭裁剪弹窗
-    setIsCropperOpen(false);
-    setCropperImageSrc('');
-    setPendingFile(null);
-    
-    // ++ Reset manual coloring mode when a new file is processed ++
-    setIsManualColoringMode(false);
-    setSelectedColor(null);
-    setIsEraseMode(false);
-  };
+    setRemapTrigger(prev => prev + 1);
+  }
+
+  // 关闭裁剪弹窗
+  setIsCropperOpen(false);
+  setCropperImageSrc('');
+  setPendingFile(null);
+  setIsManualColoringMode(false);
+  setSelectedColor(null);
+  setIsEraseMode(false);
+};
 
   // 处理裁剪取消
   const handleCropCancel = () => {
